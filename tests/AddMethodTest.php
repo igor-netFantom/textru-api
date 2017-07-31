@@ -18,4 +18,16 @@ class AddMethodTest extends \PHPUnit_Framework_TestCase
         $this->expectExceptionCode(400123);
         TextRuApi::add("","Test text");
     }
+
+    public function test_too_short_text()
+    {
+        $result = TextRuApi::add("afldkfjlas","Short test text");
+        $this->assertEquals($result["error"]["code"],112);
+    }
+
+    public function test_wrong_userkey()
+    {
+        $result = TextRuApi::add("php_unit_test","Test test test test test test test test test test test test test test test test test test test test test");
+        $this->assertEquals($result["error"]["code"],140);
+    }
 }
