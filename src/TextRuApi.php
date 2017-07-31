@@ -12,9 +12,14 @@ class TextRuApi
 
     private static $allowed_options_get = ["exceptdomain", "excepturl", "visible", "copying", "callback"];
 
-    private function __construct($userkey)
+    public function __construct($userkey, $default_options = [])
     {
         $this->userkey = $userkey;
+
+        foreach ($default_options as $key => $value) {
+            if (!in_array($key, self::$allowed_options_get)) throw new WrongParameterException("Unknown option " . $key . " provided", 400122);
+        }
+        $this->default_options = $default_options;
     }
 
     public function userkey($userkey = null)
@@ -33,7 +38,7 @@ class TextRuApi
         if (!is_array($options)) throw new WrongParameterException("Options param must be array", 400124);
 
         foreach ($options as $key => $value) {
-            if (!in_array($key, $this::$allowed_options_get)) throw new WrongParameterException("Unknown option " . $key . " provided", 400125);
+            if (!in_array($key, self::$allowed_options_get)) throw new WrongParameterException("Unknown option " . $key . " provided", 400125);
         }
 
         $post_options = ["userkey" => $userkey, "text" => $text];
@@ -52,6 +57,11 @@ class TextRuApi
 
         return $result;
 
+    }
+
+    public function adds($text, $options = [])
+    {
+        return $this::add($this->userkey, $text, $options);
     }
 
     public static function get($userkey, $uid, $jsonvisible = null)
@@ -80,6 +90,11 @@ class TextRuApi
         if (isset($answer_decoded->seo_check)) $result["seo_check"] = $answer_decoded->seo_check;
 
         return $result;
+    }
+
+    public static function gets($uid, $jsonvisible = null)
+    {
+        return $this::add($this->userkey, $uid, $jsonvisible);
     }
 
     public static function sendCurl($postfields, $url = 'http://api.text.ru/post')

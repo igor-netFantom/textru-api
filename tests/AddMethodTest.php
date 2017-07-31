@@ -16,18 +16,25 @@ class AddMethodTest extends \PHPUnit_Framework_TestCase
     {
         $this->expectException(WrongParameterException::class);
         $this->expectExceptionCode(400123);
-        TextRuApi::add("","Test text");
+        TextRuApi::add("", "Test text");
     }
 
     public function test_too_short_text()
     {
-        $result = TextRuApi::add("afldkfjlas","Short test text");
-        $this->assertEquals($result["error"]["code"],112);
+        $result = TextRuApi::add("afldkfjlas", "Short test text");
+        $this->assertEquals($result["error"]["code"], 112);
     }
 
     public function test_wrong_userkey()
     {
-        $result = TextRuApi::add("php_unit_test","Test test test test test test test test test test test test test test test test test test test test test");
-        $this->assertEquals($result["error"]["code"],140);
+        $result = TextRuApi::add("php_unit_test", "Test test test test test test test test test test test test test test test test test test test test test");
+        $this->assertEquals($result["error"]["code"], 140);
+    }
+
+    public function test_default_option_not_in_allowed_list()
+    {
+        $this->expectException(WrongParameterException::class);
+        $this->expectExceptionCode(400122);
+        $app = new TextRuApi("test", ["unknown_option" => "test"]);
     }
 }
