@@ -1,6 +1,11 @@
 {
   "name": "krylov123/textru-api",
   "description": "Text.ru API's php connector",
+  "autoload": {
+    "psr-4": {
+      "TextRuApi\\": "src/"
+    }
+  },
   "require": {
     "php": "5.6.* || >=7.0"
   },

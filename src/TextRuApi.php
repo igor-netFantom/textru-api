@@ -8,7 +8,11 @@ use TextRuApi\Exception\CurlRequestException;
 class TextRuApi
 {
 
+    /**
+     * @var
+     */
     private $userkey;
+    private $default_options;
 
     private static $allowed_options_get = ["exceptdomain", "excepturl", "visible", "copying", "callback"];
 
@@ -22,6 +26,11 @@ class TextRuApi
         $this->default_options = $default_options;
     }
 
+    /**
+     * Return $userkey or set $userkey if param provided
+     * @param null $userkey
+     * @return $this
+     */
     public function userkey($userkey = null)
     {
         if (is_null($userkey)) return $this->userkey;
@@ -31,6 +40,14 @@ class TextRuApi
         return $this;
     }
 
+    /**
+     * Send API add request to TextRu
+     * @param $userkey
+     * @param $text
+     * @param array $options
+     * @return array
+     * @throws WrongParameterException
+     */
     public static function add($userkey, $text, $options = [])
     {
         if ((empty($userkey)) || (empty($text))) throw new WrongParameterException("Required params is empty", 400123);
@@ -64,6 +81,14 @@ class TextRuApi
         return $this::add($this->userkey, $text, $options);
     }
 
+    /**
+     * Send API get request to TextRu
+     * @param $userkey
+     * @param $uid
+     * @param null $jsonvisible
+     * @return array
+     * @throws WrongParameterException
+     */
     public static function get($userkey, $uid, $jsonvisible = null)
     {
         if ((empty($userkey)) || (empty($uid))) throw new WrongParameterException("Required params is empty", 400131);
@@ -97,6 +122,13 @@ class TextRuApi
         return $this::add($this->userkey, $uid, $jsonvisible);
     }
 
+    /**
+     * Curl wrapper, send POST request with predefined settings
+     * @param $postfields
+     * @param string $url
+     * @return mixed
+     * @throws CurlRequestException
+     */
     public static function sendCurl($postfields, $url = 'http://api.text.ru/post')
     {
         if (is_array($postfields)) $postfields = http_build_query($postfields, '', '&');
