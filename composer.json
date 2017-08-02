@@ -1,6 +1,13 @@
 {
   "name": "krylov123/textru-api",
   "description": "Text.ru API's php connector",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Alexandr Krylov",
+      "email": "krylov123@gmail.com"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "TextRuApi\\": "src/"
