@@ -117,7 +117,7 @@ class TextRuApi
         return $result;
     }
 
-    public static function gets($uid, $jsonvisible = null)
+    public function gets($uid, $jsonvisible = null)
     {
         return $this::add($this->userkey, $uid, $jsonvisible);
     }
