@@ -48,7 +48,7 @@ class TextRuApi
      * @return array
      * @throws WrongParameterException
      */
-    public static function add($userkey, $text, $options = [])
+    private static function add_to_textru($userkey, $text, $options = [])
     {
         if ((empty($userkey)) || (empty($text))) throw new WrongParameterException("Required params is empty", 400123);
 
@@ -76,11 +76,6 @@ class TextRuApi
 
     }
 
-    public function adds($text, $options = [])
-    {
-        return $this::add($this->userkey, $text, $options);
-    }
-
     /**
      * Send API get request to TextRu
      * @param $userkey
@@ -89,7 +84,7 @@ class TextRuApi
      * @return array
      * @throws WrongParameterException
      */
-    public static function get($userkey, $uid, $jsonvisible = null)
+    private static function get_from_textru($userkey, $uid, $jsonvisible = null)
     {
         if ((empty($userkey)) || (empty($uid))) throw new WrongParameterException("Required params is empty", 400131);
 
@@ -117,11 +112,6 @@ class TextRuApi
         return $result;
     }
 
-    public function gets($uid, $jsonvisible = null)
-    {
-        return $this::get($this->userkey, $uid, $jsonvisible);
-    }
-
     /**
      * Curl wrapper, send POST request with predefined settings
      * @param $postfields
@@ -144,5 +134,37 @@ class TextRuApi
         if ($errno) throw new CurlRequestException(curl_error($ch), $errno);
 
         return json_decode($answer);
+    }
+
+    /**
+     * PHP magic method, for non-static methods
+     * @param $name
+     * @param $arguments
+     */
+    public function __call($name, $arguments)
+    {
+        if ($name === 'add') {
+            call_user_func_array([$this, 'add_to_textru'], array_merge([$this->userkey], $arguments));
+        }
+
+        if ($name === 'get') {
+            call_user_func_array([$this, 'get_from_textru'], array_merge([$this->userkey], $arguments));
+        }
+    }
+
+    /**
+     * PHP magic method, for static methods
+     * @param $name
+     * @param $arguments
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        if ($name === 'add') {
+            call_user_func_array(['self', 'add_to_textru'], $arguments);
+        }
+
+        if ($name === 'get') {
+            call_user_func_array(['self', 'get_from_textru'], $arguments);
+        }
     }
 }
