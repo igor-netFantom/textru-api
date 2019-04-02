@@ -4,6 +4,7 @@ namespace TextRuApi;
 
 use TextRuApi\Exception\WrongParameterException;
 use TextRuApi\Exception\CurlRequestException;
+use TextRuApi\Exception\UnknownMethodException;
 
 class TextRuApi
 {
@@ -140,6 +141,8 @@ class TextRuApi
      * PHP magic method, for non-static methods
      * @param $name
      * @param $arguments
+     * @return mixed
+     * @throws UnknownMethodException
      */
     public function __call($name, $arguments)
     {
@@ -150,12 +153,16 @@ class TextRuApi
         if ($name === 'get') {
             return call_user_func_array([$this, 'get_from_textru'], array_merge([$this->userkey], $arguments));
         }
+
+        throw new UnknownMethodException("Unknown method " . $name, 400126);
     }
 
     /**
      * PHP magic method, for static methods
      * @param $name
      * @param $arguments
+     * @return mixed
+     * @throws UnknownMethodException
      */
     public static function __callStatic($name, $arguments)
     {
@@ -166,5 +173,7 @@ class TextRuApi
         if ($name === 'get') {
             return call_user_func_array(['self', 'get_from_textru'], $arguments);
         }
+
+        throw new UnknownMethodException("Unknown static method " . $name, 400127);
     }
 }
