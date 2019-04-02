@@ -144,11 +144,11 @@ class TextRuApi
     public function __call($name, $arguments)
     {
         if ($name === 'add') {
-            call_user_func_array([$this, 'add_to_textru'], array_merge([$this->userkey], $arguments));
+            return call_user_func_array([$this, 'add_to_textru'], array_merge([$this->userkey], $arguments));
         }
 
         if ($name === 'get') {
-            call_user_func_array([$this, 'get_from_textru'], array_merge([$this->userkey], $arguments));
+            return call_user_func_array([$this, 'get_from_textru'], array_merge([$this->userkey], $arguments));
         }
     }
 
@@ -160,11 +160,11 @@ class TextRuApi
     public static function __callStatic($name, $arguments)
     {
         if ($name === 'add') {
-            call_user_func_array(['self', 'add_to_textru'], $arguments);
+            return call_user_func_array(['self', 'add_to_textru'], $arguments);
         }
 
         if ($name === 'get') {
-            call_user_func_array(['self', 'get_from_textru'], $arguments);
+            return call_user_func_array(['self', 'get_from_textru'], $arguments);
         }
     }
 }
