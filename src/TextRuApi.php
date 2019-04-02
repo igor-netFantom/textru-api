@@ -19,6 +19,8 @@ class TextRuApi
 
     public function __construct($userkey, $default_options = [])
     {
+        if (empty($userkey)) throw new WrongParameterException("userkey is empty", 400128);
+
         $this->userkey = $userkey;
 
         foreach ($default_options as $key => $value) {

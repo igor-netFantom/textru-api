@@ -2,15 +2,16 @@
 
 namespace TextRuApi\Tests;
 
-require __DIR__ . "/../src/TextRuApi.php";
-require __DIR__ . "/../src/Exception/CurlRequestException.php";
-require __DIR__ . "/../src/Exception/WrongParameterException.php";
+require_once __DIR__ . "/../src/TextRuApi.php";
+require_once __DIR__ . "/../src/Exception/CurlRequestException.php";
+require_once __DIR__ . "/../src/Exception/WrongParameterException.php";
 
 use TextRuApi\Exception\WrongParameterException;
+use TextRuApi\Exception\UnknownMethodException;
 use TextRuApi\TextRuApi;
 
 
-class AddMethodTest extends \PHPUnit_Framework_TestCase
+class StaticMethodsTest extends \PHPUnit_Framework_TestCase
 {
     public function test_empty_userkey_rise_exception()
     {
@@ -19,22 +20,22 @@ class AddMethodTest extends \PHPUnit_Framework_TestCase
         TextRuApi::add("", "Test text");
     }
 
+    public function test_unknown_static_method_exception()
+    {
+        $this->expectException(UnknownMethodException::class);
+        $this->expectExceptionCode(400127);
+        TextRuApi::unknownMethod();
+    }
+
     public function test_too_short_text()
     {
         $result = TextRuApi::add("afldkfjlas", "Short test text");
-        $this->assertEquals($result["error"]["code"], 112);
+        $this->assertEquals(112, $result["error"]["code"]);
     }
 
     public function test_wrong_userkey()
     {
         $result = TextRuApi::add("php_unit_test", "Test test test test test test test test test test test test test test test test test test test test test");
-        $this->assertEquals($result["error"]["code"], 140);
-    }
-
-    public function test_default_option_not_in_allowed_list()
-    {
-        $this->expectException(WrongParameterException::class);
-        $this->expectExceptionCode(400122);
-        $app = new TextRuApi("test", ["unknown_option" => "test"]);
+        $this->assertEquals(140, $result["error"]["code"]);
     }
 }

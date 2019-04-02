@@ -61,5 +61,5 @@ $result = TextRuApi::get($userkey, $uid, $jsonvisible);
 ## PHPUnit тесты
 Запуск из корня компонента
 ```bash
-phpunit ./tests/AddMethodTest.php --no-coverage
+./vendor/phpunit/phpunit/phpunit --no-coverage
 ```
