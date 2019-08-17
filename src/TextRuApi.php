@@ -19,12 +19,12 @@ class TextRuApi
 
     public function __construct($userkey, $default_options = [])
     {
-        if (empty($userkey)) throw new WrongParameterException("userkey is empty", 400128);
+        if (empty($userkey)) throw WrongParameterException::wrongParameter("userkey is empty", 400128);
 
         $this->userkey = $userkey;
 
         foreach ($default_options as $key => $value) {
-            if (!in_array($key, self::$allowed_options_get)) throw new WrongParameterException("Unknown option " . $key . " provided", 400122);
+            if (!in_array($key, self::$allowed_options_get)) throw WrongParameterException::wrongParameter("Unknown option " . $key . " provided", 400122);
         }
         $this->default_options = $default_options;
     }
@@ -53,12 +53,12 @@ class TextRuApi
      */
     private static function add_to_textru($userkey, $text, $options = [])
     {
-        if ((empty($userkey)) || (empty($text))) throw new WrongParameterException("Required params is empty", 400123);
+        if ((empty($userkey)) || (empty($text))) throw WrongParameterException::wrongParameter("Required params is empty", 400123);
 
-        if (!is_array($options)) throw new WrongParameterException("Options param must be array", 400124);
+        if (!is_array($options)) throw WrongParameterException::wrongParameter("Options param must be array", 400124);
 
         foreach ($options as $key => $value) {
-            if (!in_array($key, self::$allowed_options_get)) throw new WrongParameterException("Unknown option " . $key . " provided", 400125);
+            if (!in_array($key, self::$allowed_options_get)) throw WrongParameterException::wrongParameter("Unknown option " . $key . " provided", 400125);
         }
 
         $post_options = ["userkey" => $userkey, "text" => $text];
@@ -89,7 +89,7 @@ class TextRuApi
      */
     private static function get_from_textru($userkey, $uid, $jsonvisible = null)
     {
-        if ((empty($userkey)) || (empty($uid))) throw new WrongParameterException("Required params is empty", 400131);
+        if ((empty($userkey)) || (empty($uid))) throw WrongParameterException::wrongParameter("Required params is empty", 400131);
 
         $post_options = ["userkey" => $userkey, "uid" => $uid];
         if (!is_null($jsonvisible)) $post_options["jsonvisible"] = "detail";
@@ -134,7 +134,7 @@ class TextRuApi
         $answer = curl_exec($ch);
         $errno = curl_errno($ch);
 
-        if ($errno) throw new CurlRequestException(curl_error($ch), $errno);
+        if ($errno) throw CurlRequestException::curlRequestException(curl_error($ch), $errno);
 
         return json_decode($answer);
     }
@@ -156,7 +156,7 @@ class TextRuApi
             return call_user_func_array([$this, 'get_from_textru'], array_merge([$this->userkey], $arguments));
         }
 
-        throw new UnknownMethodException("Unknown method " . $name, 400126);
+        throw UnknownMethodException::unknownMethod("Unknown method " . $name, 400126);
     }
 
     /**
@@ -176,6 +176,6 @@ class TextRuApi
             return call_user_func_array(['self', 'get_from_textru'], $arguments);
         }
 
-        throw new UnknownMethodException("Unknown static method " . $name, 400127);
+        throw UnknownMethodException::unknownMethod("Unknown static method " . $name, 400127);
     }
 }
