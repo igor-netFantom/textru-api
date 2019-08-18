@@ -9,9 +9,6 @@ use TextRuApi\Exception\UnknownMethodException;
 class TextRuApi
 {
 
-    /**
-     * @var
-     */
     private $userkey;
     private $default_options;
 
@@ -68,7 +65,7 @@ class TextRuApi
 
         $result = [
             "error"    => ["code" => null, "desc" => null],
-            "text_uid" => null
+            "text_uid" => null,
         ];
 
         if (isset($answer_decoded->error_code)) $result["error"]["code"] = $answer_decoded->error_code;
@@ -101,7 +98,7 @@ class TextRuApi
             "text_unique" => null,
             "result_json" => null,
             "spell_check" => null,
-            "seo_check"   => null
+            "seo_check"   => null,
         ];
 
         if (isset($answer_decoded->error_code)) $result["error"]["code"] = $answer_decoded->error_code;
@@ -127,10 +124,12 @@ class TextRuApi
         if (is_array($postfields)) $postfields = http_build_query($postfields, '', '&');
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $postfields);
+        curl_setopt_array($ch, [
+            CURLOPT_URL            => $url,
+            CURLOPT_RETURNTRANSFER => 1,
+            CURLOPT_POST           => 1,
+            CURLOPT_POSTFIELDS     => $postfields,
+        ]);
         $answer = curl_exec($ch);
         $errno = curl_errno($ch);
 
