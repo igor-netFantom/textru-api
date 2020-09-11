@@ -58,6 +58,20 @@ $jsonvisible = 'detail'; //Необязательный параметр. Ука
 $result = TextRuApi::get($userkey, $uid, $jsonvisible);
 ```
 
+
+### Получение остатка символов
+Получение суммарного остатка символов по всем пакетам
+```php
+$userkey = 'Ваш text.ru userkey';
+
+$result = TextRuApi::account($userkey);
+//или
+$app = new \TextRuApi\TextRuApi($userkey);
+$result = $app->account();
+
+var_dump($result['size']);
+```
+
 ## PHPUnit тесты
 Запуск из корня компонента
 ```bash

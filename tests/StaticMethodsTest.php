@@ -38,4 +38,10 @@ class StaticMethodsTest extends \PHPUnit_Framework_TestCase
         $result = TextRuApi::add("php_unit_test", "Test test test test test test test test test test test test test test test test test test test test test");
         $this->assertEquals(140, $result["error"]["code"]);
     }
+
+    public function test_get_account_info()
+    {
+        $result = TextRuApi::account("php_unit_test");
+        $this->assertTrue($result['size'] > 0);
+    }
 }

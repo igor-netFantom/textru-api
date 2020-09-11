@@ -48,4 +48,11 @@ class NonStaticMethodsTest extends \PHPUnit_Framework_TestCase
         $this->expectExceptionCode(400122);
         $app = new TextRuApi("test", ["unknown_option" => "test"]);
     }
+
+    public function test_get_account_info()
+    {
+        $app = new TextRuApi("php_unit_test");
+        $result = $app->account();
+        $this->assertTrue($result['size'] > 0);
+    }
 }

@@ -8,8 +8,12 @@ use TextRuApi\Exception\UnknownMethodException;
 
 class TextRuApi
 {
+    const TEXT_URL = 'http://api.text.ru/post';
+
+    const ACCOUNT_URL = 'http://api.text.ru/account';
 
     private $userkey;
+
     private $default_options;
 
     private static $allowed_options_get = ["exceptdomain", "excepturl", "visible", "copying", "callback"];
@@ -77,6 +81,26 @@ class TextRuApi
     }
 
     /**
+     * Get Account info from API
+     * @param $userkey
+     * @return array
+     * @throws CurlRequestException
+     */
+    private static function get_account_info($userkey)
+    {
+        $query = 'method=get_packages_info&userkey='.$userkey;
+        $response = self::sendCurl($query, self::ACCOUNT_URL);
+
+        return [
+            "error" => [
+                "code" => (isset($response->error_code)) ? $response->error_code : null,
+                "desc" => (isset($response->error_desc)) ? $response->error_desc : null,
+            ],
+            "size"  => (isset($response->size)) ? $response->size : null
+        ];
+    }
+
+    /**
      * Send API get request to TextRu
      * @param $userkey
      * @param $uid
@@ -119,7 +143,7 @@ class TextRuApi
      * @return mixed
      * @throws CurlRequestException
      */
-    public static function sendCurl($postfields, $url = 'http://api.text.ru/post')
+    public static function sendCurl($postfields, $url = self::TEXT_URL)
     {
         if (is_array($postfields)) $postfields = http_build_query($postfields, '', '&');
 
@@ -155,6 +179,10 @@ class TextRuApi
             return call_user_func_array([$this, 'get_from_textru'], array_merge([$this->userkey], $arguments));
         }
 
+        if ($name === 'account') {
+            return call_user_func_array([$this, 'get_account_info'], array_merge([$this->userkey], $arguments));
+        }
+
         throw UnknownMethodException::unknownMethod("Unknown method " . $name, 400126);
     }
 
@@ -173,6 +201,10 @@ class TextRuApi
 
         if ($name === 'get') {
             return call_user_func_array(['self', 'get_from_textru'], $arguments);
+        }
+
+        if ($name === 'account') {
+            return call_user_func_array(['self', 'get_account_info'], $arguments);
         }
 
         throw UnknownMethodException::unknownMethod("Unknown static method " . $name, 400127);
